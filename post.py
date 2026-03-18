@@ -10,7 +10,10 @@ ACCESS_SECRET = os.environ["X_ACCESS_SECRET"]
 
 # news.txt読み込み
 with open("news.txt", "r", encoding="utf-8") as f:
-    text = f.read()
+    text = f.read().strip()
+
+print("投稿予定内容:")
+print(text)
 
 # 認証
 auth = OAuth1(API_KEY, API_SECRET, ACCESS_TOKEN, ACCESS_SECRET)
@@ -20,8 +23,13 @@ url = "https://api.twitter.com/2/tweets"
 response = requests.post(
     url,
     auth=auth,
-    json={"text": text}
+    json={"text": text},
+    timeout=30
 )
 
-print(response.status_code)
-print(response.text)
+print("status_code:", response.status_code)
+print("response_text:", response.text)
+
+response.raise_for_status()
+
+print("投稿成功")
